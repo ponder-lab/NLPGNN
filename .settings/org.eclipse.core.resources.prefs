@@ -16,6 +16,7 @@ encoding//nlpgnn/models/bert.py=utf-8
 encoding//nlpgnn/models/gpt2.py=utf-8
 encoding//nlpgnn/sample/samples.py=utf-8
 encoding//nlpgnn/tokenizers/__init__.py=utf-8
+encoding//tests/GNN/BERT-TextGCN/bert.py=utf-8
 encoding//tests/GNN/auto_encoder/GAAE.py=utf-8
 encoding//tests/GNN/gnn_for_nlp/text_gcn.py=utf-8
 encoding//tests/GNN/nodes_graph_classfication/train_gcn.py=utf-8
