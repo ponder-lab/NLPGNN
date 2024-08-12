@@ -66,8 +66,6 @@ accuracy_count = 0
 
 # ---------------------------------------------------------
 # For train
-stop_monitor = EarlyStoppingScale(monitor="acc", patience=20, restore_scale=True)
-
 hidden_embeddings=0
 test_features = 0
 test_y = 0
@@ -102,9 +100,6 @@ for p in range(epoch):
     print_time = timeit.default_timer()
     print("EPOCH {:.0f} loss {:.4f} ACC {:.4f} Time {:.4f}".format(p,loss_v, acc, time.time()-t))
     skipped_time += timeit.default_timer() - print_time
-    check, hidden_embeddings = stop_monitor(acc, scale=hidden_embeddings)
-    if check:
-        break
 
 train_features = hidden_embeddings[train_index]
 train_y = np.argmax(y_train[train_index], -1)
