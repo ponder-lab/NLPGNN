@@ -34,6 +34,7 @@ class GenGPT2(tf.keras.Model):
         out = self.model(inputs, past, is_training)
         return out
 
+    @tf.function
     def predict(self, inputs, past=None, is_training=False):
         return self(inputs, past, is_training)
 

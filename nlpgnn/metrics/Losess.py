@@ -6,6 +6,7 @@ class MaskSparseCategoricalCrossentropy():
         self.from_logits = from_logits
         self.use_mask = use_mask
 
+    @tf.function
     def __call__(self, y_true, y_predict, input_mask=None):
         cross_entropy = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_predict, self.from_logits)
         if self.use_mask:
