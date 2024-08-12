@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//nlpgnn/abandoned/__init__.py=utf-8
+encoding//nlpgnn/callbacks.py=utf-8
 encoding//nlpgnn/datas/__init__.py=utf-8
 encoding//nlpgnn/datas/graphloader.py=utf-8
 encoding//nlpgnn/gnn/GAAEConv.py=utf-8
