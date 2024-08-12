@@ -8,6 +8,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 from nlpgnn.callbacks import EarlyStoppingScale
 
+from scripts.utils import write_csv
+import timeit
+
 hidden_dim = 300
 drop_rate = 0.5
 epoch = 100
@@ -21,6 +24,8 @@ train_index = np.argwhere(train_mask == 1).reshape([-1]).tolist()
 valid_index = np.argwhere(val_mask == 1).reshape([-1]).tolist()
 test_index = np.argwhere(test_mask == 1).reshape([-1]).tolist()
 
+start_time = timeit.default_timer()
+skipped_time = 0
 
 class GAAE(tf.keras.Model):
     def __init__(self, hidden_dim, lamb=1, **kwargs):
@@ -53,6 +58,12 @@ model = GAAE(hidden_dim)
 
 optimizer = tf.keras.optimizers.Adam(0.1)
 
+total_loss = 0
+loss_count = 0
+
+total_accuracy = 0
+accuracy_count = 0
+
 # ---------------------------------------------------------
 # For train
 stop_monitor = EarlyStoppingScale(monitor="acc", patience=20, restore_scale=True)
@@ -70,6 +81,8 @@ for p in range(epoch):
     optimizer.apply_gradients(grads_and_vars=zip(grads, model.variables))
 
     loss_v, hidden_embeddings = model.predict(features, adj)
+    total_loss += loss_v
+    loss_count += 1
     hidden_embeddings = hidden_embeddings.numpy()
 
     train_features = hidden_embeddings[train_index]
@@ -84,7 +97,11 @@ for p in range(epoch):
     predict_y = clf.predict(valid_features)
     report_v = classification_report(valid_y, predict_y, digits=4, output_dict=True)
     acc = report_v["accuracy"]
+    total_accuracy += acc
+    accuracy_count += 1
+    print_time = timeit.default_timer()
     print("EPOCH {:.0f} loss {:.4f} ACC {:.4f} Time {:.4f}".format(p,loss_v, acc, time.time()-t))
+    skipped_time += timeit.default_timer() - print_time
     check, hidden_embeddings = stop_monitor(acc, scale=hidden_embeddings)
     if check:
         break
@@ -102,3 +119,9 @@ predict_y = clf.predict(test_features)
 report = classification_report(test_y, predict_y, digits=4, output_dict=True)
 acc = report["accuracy"]
 print("Test: Loss {:.5f} Acc {:.5f}".format(loss_v, acc))
+
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(total_loss) / float(loss_count)
+avg_accuracy = float(total_accuracy)/ float(accuracy_count)
+
+write_csv(__file__, epoch, float(avg_accuracy), float(avg_loss), time)
