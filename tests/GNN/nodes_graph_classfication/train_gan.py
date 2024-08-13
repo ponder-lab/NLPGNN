@@ -34,7 +34,6 @@ model = GATLayer(hidden_dim=hidden_dim, num_class=num_class, dropout_rate=drop_r
 optimizer = tf.keras.optimizers.Adam(0.005)
 crossentropy = Losess.MaskCategoricalCrossentropy()
 accscore = Metric.MaskAccuracy()
-stop_monitor = EarlyStopping(monitor="loss", patience=patience)
 
 total_loss = 0
 loss_count = 0
@@ -64,8 +63,6 @@ for p in range(epoch):
     print_time = timeit.default_timer()
     print("Epoch {} | Loss {:.4f} | Acc {:.4f} | Time {:.4f}".format(p, loss_v.numpy(), acc_v, time.time() - t))
     skipped_time += timeit.default_timer() - print_time
-    if stop_monitor(loss_v, model):
-        break
 # --------------------------------------------------------------------------------------
 # For test
 predict_t = model.predict(features, adj)
