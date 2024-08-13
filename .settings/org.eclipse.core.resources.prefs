@@ -4,6 +4,7 @@ encoding//nlpgnn/callbacks.py=utf-8
 encoding//nlpgnn/datas/__init__.py=utf-8
 encoding//nlpgnn/datas/graphloader.py=utf-8
 encoding//nlpgnn/gnn/GAAEConv.py=utf-8
+encoding//nlpgnn/gnn/GCNConv.py=utf-8
 encoding//nlpgnn/gnn/GINConv.py=utf-8
 encoding//nlpgnn/gnn/messagepassing.py=utf-8
 encoding//nlpgnn/layers/decoder.py=utf-8
