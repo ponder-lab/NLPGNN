@@ -9,6 +9,9 @@ from nlpgnn.metrics import Losess, Metric
 from nlpgnn.models import GATLayer
 from nlpgnn.callbacks import EarlyStopping
 
+from scripts.utils import write_csv
+import timeit
+
 tf.random.set_seed(10)  # 随机选择的
 hidden_dim = 8  # 8*heads=64
 num_class = 7
@@ -23,12 +26,21 @@ loader = Planetoid(name="cora", loop=True, norm=True)
 
 features, adj, y_train, y_val, y_test, train_mask, val_mask, test_mask = loader.load()
 
+start_time = timeit.default_timer()
+skipped_time = 0
+
 model = GATLayer(hidden_dim=hidden_dim, num_class=num_class, dropout_rate=drop_rate)
 
 optimizer = tf.keras.optimizers.Adam(0.005)
 crossentropy = Losess.MaskCategoricalCrossentropy()
 accscore = Metric.MaskAccuracy()
 stop_monitor = EarlyStopping(monitor="loss", patience=patience)
+
+total_loss = 0
+loss_count = 0
+
+total_accuracy = 0
+accuracy_count = 0
 
 # ---------------------------------------------------------
 # For train
@@ -44,8 +56,14 @@ for p in range(epoch):
 
     predict_v = model.predict(features, adj)
     loss_v = crossentropy(y_val, predict_v, val_mask)
+    total_loss += loss_v
+    loss_count += 1
     acc_v = accscore(y_val, predict_v, val_mask)
+    total_accuracy += acc_v
+    accuracy_count += 1
+    print_time = timeit.default_timer()
     print("Epoch {} | Loss {:.4f} | Acc {:.4f} | Time {:.4f}".format(p, loss_v.numpy(), acc_v, time.time() - t))
+    skipped_time += timeit.default_timer() - print_time
     if stop_monitor(loss_v, model):
         break
 # --------------------------------------------------------------------------------------
@@ -54,3 +72,9 @@ predict_t = model.predict(features, adj)
 acc = accscore(y_test, predict_t, test_mask)
 loss = crossentropy(y_test, predict_t, test_mask)
 print("Test Loss {:.4f} | ACC {:.4f}".format(loss.numpy(), acc))
+
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(total_loss) / float(loss_count)
+avg_accuracy = float(total_accuracy)/ float(accuracy_count)
+
+write_csv(__file__, epoch, float(avg_accuracy), float(avg_loss), time)
