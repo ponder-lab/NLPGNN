@@ -70,10 +70,6 @@ for p in range(epoch):
         break
 # --------------------------------------------------------------------------------------
 
-time = timeit.default_timer() - start_time - skipped_time
-avg_loss = float(total_loss) / float(loss_count)
-avg_accuracy = float(total_accuracy)/ float(accuracy_count)
-
 # For test
 predict_t = model.predict(features, adj)
 acc = accscore(y_test, predict_t, test_mask)
@@ -81,5 +77,9 @@ loss = crossentropy(y_test, predict_t, test_mask)
 print_time = timeit.default_timer()
 print("Test Loss {:.4f} | ACC {:.4f}".format(loss.numpy(), acc))
 skipped_time += timeit.default_timer() - print_time
+
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(total_loss) / float(loss_count)
+avg_accuracy = float(total_accuracy)/ float(accuracy_count)
 
 write_csv(__file__, epoch_count, float(avg_accuracy), float(avg_loss), time)
