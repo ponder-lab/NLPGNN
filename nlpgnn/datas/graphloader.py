@@ -350,6 +350,7 @@ class Planetoid:
         mask[idx] = 1
         return np.array(mask, dtype=np.bool)
 
+    @tf.function
     def feature_normalize(self, features):
         rowsum = np.array(features.sum(1))
         r_inv = np.power(rowsum, -1).flatten()
@@ -503,6 +504,7 @@ class TUDataset:
         # edge_index, edge_attr = coalesce(edge_index, edge_attr, num_nodes)
         return x, y, edge_index, edge_attr, num_nodes, batch
 
+    @tf.function
     def cat(self, seq):
         seq = [item for item in seq if item is not None]
         seq = [np.expand_dims(item, -1) if len(item.shape) == 1 else item for item in seq]

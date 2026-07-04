@@ -53,6 +53,7 @@ class DenseLayer3d(tf.keras.layers.Layer):
         )
         self.built = True
 
+    @tf.function
     def call(self, input_tensor):
         w = tf.reshape(self.w, [self.hidden_size, self.num_attention_heads, self.head_size])
         b = tf.reshape(self.b, [self.num_attention_heads, self.head_size])
@@ -94,6 +95,7 @@ class DenseLayer3dProj(tf.keras.layers.Layer):
             name="bias", shape=[self.hidden_size], initializer=tf.zeros_initializer)
         self.built = True
 
+    @tf.function
     def call(self, input_tensor):
         w = tf.reshape(self.w, [self.num_attention_heads, self.head_size,
                                 self.hidden_size])
@@ -135,6 +137,7 @@ class DenseLayer2d(tf.keras.layers.Layer):
             initializer=tf.zeros_initializer)
         self.built = True
 
+    @tf.function
     def call(self, input_tensor):
         if self.use_einsum:
             ret = tf.einsum("BFH,HO->BFO", input_tensor, self.w)
