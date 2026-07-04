@@ -117,6 +117,7 @@ def build_sentence_graph(batch_sentence, batch_attention_matrix, node2index, top
     return batch_nodes, batch_edge_lists, batch_edge_weights
 
 
+@tf.function
 def draw_plot(matrix, x_label, y_label):
     sns.set()
     f, ax = plt.subplots(figsize=(9, 6))

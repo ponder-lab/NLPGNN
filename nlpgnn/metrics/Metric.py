@@ -243,6 +243,7 @@ class SparseF1Score(object):
         self.average = average
         self.predict_sparse = predict_sparse
 
+    @tf.function
     def __call__(self, y_true, y_predict):
         y_true = tf.reshape(tf.constant(y_true), [-1]).numpy()
 
@@ -260,6 +261,7 @@ class SparseRecallScore(object):
         self.average = average
         self.predict_sparse = predict_sparse
 
+    @tf.function
     def __call__(self, y_true, y_predict):
         if self.predict_sparse:
             y_predict = tf.reshape(y_predict, [-1]).numpy()
@@ -275,6 +277,7 @@ class SparsePrecisionScore(object):
         self.average = average
         self.predict_sparse = predict_sparse
 
+    @tf.function
     def __call__(self, y_true, y_predict):
         y_true = tf.reshape(tf.constant(y_true), [-1]).numpy()
         if self.predict_sparse:
@@ -305,6 +308,7 @@ class SparseAccuracy(object):
     def __init__(self, predict_sparse=False):
         self.predict_sparse = predict_sparse
 
+    @tf.function
     def __call__(self, y_true, y_predict):
         y_true = tf.reshape(tf.constant(y_true), [-1]).numpy()
         if self.predict_sparse:
@@ -317,6 +321,7 @@ class SparseAccuracy(object):
 
 
 class MaskAccuracy:
+    @tf.function
     def __call__(self, labels, predicts, input_mask=None):
         correct_prediction = tf.equal(tf.argmax(predicts, 1), tf.argmax(labels, 1))
         accuracy_all = tf.cast(correct_prediction, tf.float64)
