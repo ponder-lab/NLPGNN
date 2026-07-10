@@ -31,6 +31,7 @@ class CrfLogLikelihood(tf.keras.layers.Layer):
             initializer=initializer,
             name="transitions")
 
+    @tf.function
     def call(self, inputs, tag_indices, sequence_lengths):
         # cast type to handle different types
         tag_indices = tf.cast(tag_indices, dtype=tf.int32)
@@ -43,6 +44,7 @@ class CrfLogLikelihood(tf.keras.layers.Layer):
         log_likelihood = sequence_scores - log_norm
         return log_likelihood, self.transition_params
 
+    @tf.function
     def crf_decode(selfself, potentials, transition_params, sequence_length):
         sequence_length = tf.cast(sequence_length, dtype=tf.int32)
         initial_state = tf.slice(potentials, [0, 0, 0], [-1, 1, -1])
@@ -71,6 +73,7 @@ class CrfLogLikelihood(tf.keras.layers.Layer):
         return decode_tags, best_score
 
 
+@tf.function
 def crf_sequence_score(inputs, tag_indices, sequence_lengths,
                        transition_params):
     tag_indices = tf.cast(tag_indices, dtype=tf.int32)
@@ -83,6 +86,7 @@ def crf_sequence_score(inputs, tag_indices, sequence_lengths,
     return sequence_scores
 
 
+@tf.function
 def crf_unary_score(tag_indices, sequence_lengths, inputs):
     tag_indices = tf.cast(tag_indices, dtype=tf.int32)
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
@@ -111,6 +115,7 @@ def crf_unary_score(tag_indices, sequence_lengths, inputs):
     return unary_scores  # 获得模型预测得分
 
 
+@tf.function
 def crf_binary_score(tag_indices, sequence_lengths, transition_params):
     tag_indices = tf.cast(tag_indices, dtype=tf.int32)
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
@@ -139,6 +144,7 @@ def crf_binary_score(tag_indices, sequence_lengths, transition_params):
     return binary_scores
 
 
+@tf.function
 def crf_log_norm(inputs, sequence_lengths, transition_params):
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
     # Split up the first and rest of the inputs in preparation for the forward
@@ -157,6 +163,7 @@ def crf_log_norm(inputs, sequence_lengths, transition_params):
     return log_norm
 
 
+@tf.function
 def crf_forward(inputs, state, transition_params, sequence_lengths):
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
 
@@ -182,6 +189,7 @@ def crf_forward(inputs, state, transition_params, sequence_lengths):
     return tf.gather_nd(all_alphas, idxs)
 
 
+@tf.function
 def crf_decode_forward(inputs, state, transition_params, sequence_lengths):
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
     mask = tf.sequence_mask(sequence_lengths, tf.shape(inputs)[1])
@@ -235,6 +243,7 @@ class CrfDecodeForwardRnnCell(tf.keras.layers.AbstractRNNCell):
         return backpointers, new_state
 
 
+@tf.function
 def crf_decode_backward(inputs, state):
     """Computes backward decoding in a linear-chain CRF.
     Args:

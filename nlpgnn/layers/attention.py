@@ -13,6 +13,7 @@ from nlpgnn.tools import create_initializer, reshape_to_matrix, get_shape_list
 from nlpgnn.layers import dense
 
 
+@tf.function
 def transpose_for_scores(input_tensor, batch_size, num_attention_heads, seq_length, width):
     output_tensor = tf.reshape(input_tensor, [batch_size, seq_length, num_attention_heads, width])
     output_tensor = tf.transpose(output_tensor, [0, 2, 1, 3])
