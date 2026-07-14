@@ -15,7 +15,6 @@ class GCNLayer(tf.keras.Model):
         self.dropout1 = tf.keras.layers.Dropout(dropout_rate)
         self.dropout2 = tf.keras.layers.Dropout(dropout_rate)
 
-    @tf.function
     def call(self, node_embeddings, adjacency_lists, training=True):
         node_embeddings = self.dropout1(node_embeddings, training=training)
         x = self.gc1(GNNInput(node_embeddings, adjacency_lists))
@@ -25,6 +24,5 @@ class GCNLayer(tf.keras.Model):
         x = self.gc2(GNNInput(x, adjacency_lists))
         return tf.math.softmax(x, -1)
 
-    @tf.function
     def predict(self, node_embeddings, adjacency_lists, training=False):
         return self(node_embeddings, adjacency_lists, training)

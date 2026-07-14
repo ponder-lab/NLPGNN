@@ -33,6 +33,7 @@ class GenGPT2(tf.keras.Model):
         super(GenGPT2, self).__init__(**kwargs)
         self.model = gpt2.GPT2(param)
 
+    @tf.function
     def call(self, inputs, past=None, is_training=True):
         out = self.model(inputs, past, is_training)
         return out
