@@ -16,6 +16,7 @@ class GNNInput(NamedTuple):
     adjacency_lists: List
 
 
+@tf.function
 def add_remain_self_loop(adjacency_lists, num_nodes):
     loop_index = tf.range(0, num_nodes)
     loop_index = tf.expand_dims(loop_index, 1)
@@ -48,6 +49,7 @@ def maybe_num_nodes(index, num_nodes):
     return tf.reduce_max(index) + 1 if num_nodes is None else num_nodes
 
 
+@tf.function
 def masksoftmax(src, index, num_nodes=None):
     num_nodes = maybe_num_nodes(index, num_nodes)
     inter = tf.math.unsorted_segment_max(data=src,
