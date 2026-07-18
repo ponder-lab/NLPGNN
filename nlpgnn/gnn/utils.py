@@ -150,6 +150,7 @@ def merge_batch_graph(x, y, edge_index, edge_attr, batch):
     return x, y, edge_index, edge_attr, batch
 
 
+@tf.function
 def batch_read_out(x, batch, method="sum", size=None):
     n_batch = tf.unique(batch)[1]
     size = tf.reduce_max(n_batch) + 1 if size is None else size
