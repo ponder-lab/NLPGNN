@@ -1,0 +1,36 @@
+{
+  "types": [
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "Sminarog.load_graph",
+      "variable": "nodes",
+      "dtype": "int64",
+      "shape": "n",
+      "attribution": "np.load of R8 *_nodes.npy: per-graph node2index id lists written by tests/GNN/BERT-TextGCN/build_graph.py (np.save, line 218; ids from node2index at line 113)."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "Sminarog.load_graph",
+      "variable": "adjs",
+      "dtype": "int64",
+      "shape": "n 2",
+      "attribution": "np.load of R8 *_edge_lists.npy: per-graph [source, target] word-index pairs (build_graph.py lines 109, 115-116)."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "Sminarog.load_graph",
+      "variable": "edge_attrs",
+      "dtype": "float32",
+      "shape": "n",
+      "attribution": "np.load of R8 *_edge_weights.npy: BERT attention top-k scores (build_graph.py line 110, tf.math.top_k values), float32; corrected 2026-07-25 from an earlier int64 claim that traced the wrong writer."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "Sminarog.load_graph",
+      "variable": "batchs",
+      "dtype": "int64",
+      "shape": "n",
+      "attribution": "np.load of R8 *_batchs.npy: per-graph graph-id lists (build_graph.py line 205)."
+    }
+  ]
+}
