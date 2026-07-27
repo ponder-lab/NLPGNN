@@ -31,6 +31,46 @@
       "dtype": "int64",
       "shape": "n",
       "attribution": "np.load of R8 *_batchs.npy: per-graph graph-id lists (build_graph.py line 205)."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "TUDataset.read_data",
+      "variable": "x",
+      "dtype": "float64",
+      "shape": "3371 7",
+      "attribution": "MUTAG: cat of the np.eye one-hot over node_labels (7 classes); no node_attributes file in MUTAG, so x is the one-hot alone. Runtime-recorded 2026-07-27 from the TUDataset download."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "TUDataset.read_data",
+      "variable": "y",
+      "dtype": "int64",
+      "shape": "188",
+      "attribution": "MUTAG graph_labels via np.unique inverse; 188 graphs. Runtime-recorded 2026-07-27."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "TUDataset.read_data",
+      "variable": "edge_index",
+      "dtype": "int64",
+      "shape": "7442 2",
+      "attribution": "MUTAG A.txt pairs, zero-based via - 1. Runtime-recorded 2026-07-27."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "TUDataset.read_data",
+      "variable": "edge_attr",
+      "dtype": "float64",
+      "shape": "7442 4",
+      "attribution": "MUTAG: np.eye one-hot over edge_labels (4 bond classes). Runtime-recorded 2026-07-27."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "TUDataset.read_data",
+      "variable": "batch",
+      "dtype": "int64",
+      "shape": "3371 1",
+      "attribution": "MUTAG graph_indicator, zero-based; note the 2-D (n, 1) row structure from read_raw_text. Runtime-recorded 2026-07-27."
     }
   ]
 }
