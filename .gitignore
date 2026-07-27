@@ -217,3 +217,9 @@ Sessionx.vim
 tags
 # Persistent undo
 [._]*.un~
+
+# Generated R8 inputs and the staged BERT checkpoint (Python-Subjects#14).
+data/R8/
+uncased_L-12_H-768_A-12/
+uncased_L-12_H-768_A-12.zip
+data/MUTAG/
