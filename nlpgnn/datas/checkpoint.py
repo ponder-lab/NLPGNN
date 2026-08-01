@@ -90,17 +90,31 @@ class LoadCheckpoint(object):
 
         if model in ["bert", "albert"]:
             self.url = url
-            self.size = self.getsize(self.url)
             filename = url.split('/')[-1]
-            if not os.path.exists(filename):
-                open(filename, 'w').close()
-            if os.path.getsize(filename) != self.size:
-                print("Download and unzip: {}".format(filename))
-                self.download(url, filename, self.size)
-            if filename.endswith("zip"):
-                self.unzip(filename)
-            elif filename.endswith('gz'):
-                self.ungz(filename)
+            # Reuse a checkpoint that is already extracted. The archive was fetched and
+            # unpacked once; re-checking its size against the remote, and re-extracting it on
+            # every run, makes the model unusable the moment the remote stops serving it.
+            # The 2018 checkpoints now answer 403, and the archive left behind is the error
+            # page, so extraction fails and no driver can start even though the weights are
+            # present and readable.
+            # Derive the directory the same way `load_bert_param` does, by splitting at the
+            # first dot. `rsplit` was wrong for the ALBERT archives, whose `.tar.gz` suffix
+            # left a trailing `.tar` so the guard never matched and every run still paid a
+            # remote check.
+            extracted = filename.split('.')[0]
+            if os.path.isdir(extracted) and os.listdir(extracted):
+                self.size = None
+            else:
+                self.size = self.getsize(self.url)
+                if not os.path.exists(filename):
+                    open(filename, 'w').close()
+                if os.path.getsize(filename) != self.size:
+                    print("Download and unzip: {}".format(filename))
+                    self.download(url, filename, self.size)
+                if filename.endswith("zip"):
+                    self.unzip(filename)
+                elif filename.endswith('gz'):
+                    self.ungz(filename)
         if model in ["gpt2", "gpt"]:
             for filename in self.all_files:
                 self.url = "https://openaipublic.blob.core.windows.net/gpt-2/models/" + self.gpt_size + "/" + filename
