@@ -97,7 +97,11 @@ class LoadCheckpoint(object):
             # The 2018 checkpoints now answer 403, and the archive left behind is the error
             # page, so extraction fails and no driver can start even though the weights are
             # present and readable.
-            extracted = filename.rsplit('.', 1)[0]
+            # Derive the directory the same way `load_bert_param` does, by splitting at the
+            # first dot. `rsplit` was wrong for the ALBERT archives, whose `.tar.gz` suffix
+            # left a trailing `.tar` so the guard never matched and every run still paid a
+            # remote check.
+            extracted = filename.split('.')[0]
             if os.path.isdir(extracted) and os.listdir(extracted):
                 self.size = None
             else:
