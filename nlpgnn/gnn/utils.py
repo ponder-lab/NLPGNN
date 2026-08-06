@@ -45,6 +45,7 @@ def remove_self_loop(adjacency_lists, edge_attr=None):
     return adjacency_lists, edge_attr
 
 
+@tf.function
 def maybe_num_nodes(index, num_nodes):
     return tf.reduce_max(index) + 1 if num_nodes is None else num_nodes
 
