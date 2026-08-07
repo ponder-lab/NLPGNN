@@ -31,6 +31,7 @@ class BiLSTM(tf.keras.layers.Layer):
                                  return_sequences=return_sequences, dropout=dropout_rate)
         )
 
+    @tf.function
     def call(self, inputs, training):
         embed = self.embedding(inputs)
         logits = self.bilstm(embed, training=training)
