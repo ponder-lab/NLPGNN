@@ -68,6 +68,7 @@ class MessagePassing(tf.keras.layers.Layer):
 
         return new_nodes_states
 
+    @tf.function
     def _calculate_messages_all_type(self, node_embeddings, adjacency_lists, training):
         messages_all_type = []
         type_incoming_edges_num, type_outing_edges_num = self._calculate_type_to_incoming_edges_num(node_embeddings,
@@ -93,6 +94,7 @@ class MessagePassing(tf.keras.layers.Layer):
             messages_all_type.append(messages)
         return messages_all_type
 
+    @tf.function
     def _calculate_type_to_incoming_edges_num(self, node_embeddings, adjacency_lists):
         """
         L:edge type
@@ -123,6 +125,7 @@ class MessagePassing(tf.keras.layers.Layer):
             type_to_outing_edges_num.append(outing_edges_num)
         return tf.stack(type_to_incoming_edges_num), tf.stack(type_to_outing_edges_num)
 
+    @tf.function
     def _aggregate_function(self,
                             message_per_type,
                             edge_type_to_message_targets,
