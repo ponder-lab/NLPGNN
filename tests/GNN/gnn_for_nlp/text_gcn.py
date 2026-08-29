@@ -64,6 +64,7 @@ class TextGCNDynamicWeight(tf.keras.layers.Layer):
 
         )
 
+    @tf.function
     def call(self, node, adj, edge_attr, batch, training=True):
         edge_attr = tf.cast(edge_attr, dtype=tf.int32)
         edge_weight = tf.gather(self.ean, edge_attr)# 引入预训练
@@ -72,6 +73,7 @@ class TextGCNDynamicWeight(tf.keras.layers.Layer):
         predict = self.model(feature, etans, adj, batch, edge_weight, training=training)
         return predict
 
+    @tf.function
     def predict(self, nodes, adj, edge_attr, batch, training=False):
         return self(nodes, adj, edge_attr, batch, training)
 
