@@ -41,6 +41,7 @@ class TuckER(tf.keras.Model):
             trainable=True,
         )
 
+    @tf.function
     def call(self, e1_idx, r_idx, training=True):
         e1 = self.E(e1_idx)
         x = self.bn0(e1, training=training)
@@ -59,6 +60,7 @@ class TuckER(tf.keras.Model):
         pred = tf.math.sigmoid(x)
         return pred
 
+    @tf.function(input_signature=[tf.TensorSpec(shape=(128,), dtype=tf.int32), tf.TensorSpec(shape=(128,), dtype=tf.int32)])
     def predict(self, e1_idx, r_idx):
         pre = self(e1_idx, r_idx, training=False)
         return pre

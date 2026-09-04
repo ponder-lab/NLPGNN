@@ -27,6 +27,7 @@ class TextGCN2019(tf.keras.Model):
         self.norm1 = tf.keras.layers.BatchNormalization()
         self.norm2 = tf.keras.layers.BatchNormalization()
 
+    @tf.function
     def call(self, node_embeddings, etans, edge_indexs, batchs, edge_weights, training=True):
         edge_indexs = [edge_indexs]
         edge_weights = [edge_weights]
