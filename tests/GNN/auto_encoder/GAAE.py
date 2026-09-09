@@ -34,6 +34,7 @@ class GAAE(tf.keras.Model):
         self.hidden_dim = hidden_dim
         self.model = GAAELayer(hidden_dim, num_layers=2)
 
+    @tf.function
     def call(self, node_embeddings, adjacency_lists, training=True):
         edge_sources = adjacency_lists[0][:, 0]  # [M]
         edge_targets = adjacency_lists[0][:, 1]  # [M]
@@ -48,6 +49,7 @@ class GAAE(tf.keras.Model):
         loss = features_loss + self.lamb * structure_loss
         return loss, hidden_embeddings
 
+    @tf.function
     def predict(self, node_embeddings, adjacency_lists, training=False):
         return self(node_embeddings, adjacency_lists, training)
 
