@@ -31,7 +31,7 @@ class CrfLogLikelihood(tf.keras.layers.Layer):
             initializer=initializer,
             name="transitions")
 
-    @tf.function
+    @tf.function(input_signature=[tf.TensorSpec(shape=(None, None, 46), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.int64), tf.TensorSpec(shape=(None,), dtype=tf.int64)])
     def call(self, inputs, tag_indices, sequence_lengths):
         # cast type to handle different types
         tag_indices = tf.cast(tag_indices, dtype=tf.int32)
@@ -73,7 +73,7 @@ class CrfLogLikelihood(tf.keras.layers.Layer):
         return decode_tags, best_score
 
 
-@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, None), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.int32), tf.TensorSpec(shape=(None,), dtype=tf.int32), tf.TensorSpec(shape=(None, None), dtype=tf.float32)])
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, 46), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.int32), tf.TensorSpec(shape=(None,), dtype=tf.int32), tf.TensorSpec(shape=(46, 46), dtype=tf.float32)])
 def crf_sequence_score(inputs, tag_indices, sequence_lengths,
                        transition_params):
     tag_indices = tf.cast(tag_indices, dtype=tf.int32)
@@ -86,7 +86,7 @@ def crf_sequence_score(inputs, tag_indices, sequence_lengths,
     return sequence_scores
 
 
-@tf.function(input_signature=[tf.TensorSpec(shape=(None, None), dtype=tf.int32), tf.TensorSpec(shape=(None,), dtype=tf.int32), tf.TensorSpec(shape=(None, None, None), dtype=tf.float32)])
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, None), dtype=tf.int32), tf.TensorSpec(shape=(None,), dtype=tf.int32), tf.TensorSpec(shape=(None, None, 46), dtype=tf.float32)])
 def crf_unary_score(tag_indices, sequence_lengths, inputs):
     tag_indices = tf.cast(tag_indices, dtype=tf.int32)
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
@@ -115,7 +115,7 @@ def crf_unary_score(tag_indices, sequence_lengths, inputs):
     return unary_scores  # 获得模型预测得分
 
 
-@tf.function(input_signature=[tf.TensorSpec(shape=(None, None), dtype=tf.int32), tf.TensorSpec(shape=(None,), dtype=tf.int32), tf.TensorSpec(shape=(None, None), dtype=tf.float32)])
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, None), dtype=tf.int32), tf.TensorSpec(shape=(None,), dtype=tf.int32), tf.TensorSpec(shape=(46, 46), dtype=tf.float32)])
 def crf_binary_score(tag_indices, sequence_lengths, transition_params):
     tag_indices = tf.cast(tag_indices, dtype=tf.int32)
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
@@ -144,7 +144,7 @@ def crf_binary_score(tag_indices, sequence_lengths, transition_params):
     return binary_scores
 
 
-@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, None), dtype=tf.float32), tf.TensorSpec(shape=(None,), dtype=tf.int32), tf.TensorSpec(shape=(None, None), dtype=tf.float32)])
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, 46), dtype=tf.float32), tf.TensorSpec(shape=(None,), dtype=tf.int32), tf.TensorSpec(shape=(46, 46), dtype=tf.float32)])
 def crf_log_norm(inputs, sequence_lengths, transition_params):
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
     # Split up the first and rest of the inputs in preparation for the forward
@@ -163,7 +163,7 @@ def crf_log_norm(inputs, sequence_lengths, transition_params):
     return log_norm
 
 
-@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, None), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.float32), tf.TensorSpec(shape=(None,), dtype=tf.int32)])
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, 46), dtype=tf.float32), tf.TensorSpec(shape=(None, 46), dtype=tf.float32), tf.TensorSpec(shape=(46, 46), dtype=tf.float32), tf.TensorSpec(shape=(None,), dtype=tf.int32)])
 def crf_forward(inputs, state, transition_params, sequence_lengths):
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
 
@@ -189,7 +189,7 @@ def crf_forward(inputs, state, transition_params, sequence_lengths):
     return tf.gather_nd(all_alphas, idxs)
 
 
-@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, None), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.float32), tf.TensorSpec(shape=(None, None), dtype=tf.float32), tf.TensorSpec(shape=(None,), dtype=tf.int32)])
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, 46), dtype=tf.float32), tf.TensorSpec(shape=(None, 46), dtype=tf.float32), tf.TensorSpec(shape=(46, 46), dtype=tf.float32), tf.TensorSpec(shape=(None,), dtype=tf.int32)])
 def crf_decode_forward(inputs, state, transition_params, sequence_lengths):
     sequence_lengths = tf.cast(sequence_lengths, dtype=tf.int32)
     mask = tf.sequence_mask(sequence_lengths, tf.shape(inputs)[1])
