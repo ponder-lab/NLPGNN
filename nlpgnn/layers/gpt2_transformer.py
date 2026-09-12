@@ -34,6 +34,7 @@ class MLP(tf.keras.layers.Layer):
 
         self.dropout = tf.keras.layers.Dropout(self.resid_pdrop_rate)
 
+    @tf.function
     def call(self, input, training=True):
         h = self.act(self.c_fc(input))
         h2 = self.c_proj(h)
