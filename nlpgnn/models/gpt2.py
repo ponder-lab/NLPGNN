@@ -83,11 +83,13 @@ class GPT2(tf.keras.layers.Layer):
         nsteps = tf.shape(tokens)[1]
         return self.expand_tile(past_length + tf.range(nsteps), batch_size)
 
+    @tf.function
     def expand_tile(self, value, size):
         value = tf.convert_to_tensor(value, name='value')
         ndims = value.shape.ndims
         return tf.tile(tf.expand_dims(value, axis=0), [size] + [1] * ndims)
 
+    @tf.function
     def call(self, input_ids, past=None, training=False):
         results = {}
         input_ids = tf.cast(input_ids, tf.int32)

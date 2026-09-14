@@ -64,6 +64,7 @@ def sample_sequence(model, param, length=None,
                        param.get("n_head"), None,
                        param.get("n_embd") // param.get("n_head")]
 
+    @tf.function
     def step(tokens, past=None):
         lm_output = model.predict(tokens, past)
         logits = lm_output["logits"][:, :, :param.get("n_vocab")]
