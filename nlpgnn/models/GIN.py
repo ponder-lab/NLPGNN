@@ -58,6 +58,7 @@ class GINLayer(tf.keras.Model):
             self.denses.append(Dense(num_classes))
             self.drops.append(tf.keras.layers.Dropout(drop_rate))
 
+    @tf.function
     def call(self, node_embeddings, edge_index, batch, training=True):
         edge_index = [edge_index]
         hidden_rep = [node_embeddings]
@@ -73,5 +74,6 @@ class GINLayer(tf.keras.Model):
 
         return tf.math.softmax(score, -1)
 
+    @tf.function
     def predict(self, node_embeddings, edge_index, batch, training=False):
         return self(node_embeddings, edge_index, batch, training)
