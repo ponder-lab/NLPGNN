@@ -16,5 +16,5 @@ if [ ! -f "$D/bert_config.json" ]; then
     curl -sfL -o "$D/vocab.txt" "$B/vocab.txt"
     curl -sfL -o "$D/bert_config.json" "$B/config.json"
 fi
-PYTHONPATH=. python3.10 tests/GNN/BERT-TextGCN/build_graph_gen.py
+PYTHONPATH=. "${PYTHON:-python3.10}" tests/GNN/BERT-TextGCN/build_graph_gen.py
 mv data/train_*.npy data/test_*.npy data/R8/
