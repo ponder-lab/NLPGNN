@@ -37,6 +37,7 @@ class WDEmbedding(tf.keras.layers.Layer):
         )
         self.built = True
 
+    @tf.function
     def call(self, input_ids):
         if input_ids.shape.ndims == 2:
             input_ids = tf.expand_dims(input_ids, axis=[-1])
@@ -102,6 +103,7 @@ class SegPosEmbedding(tf.keras.layers.Layer):
 
         self.built = True
 
+    @tf.function
     def call(self, input_tensor, token_type_ids=None, is_training=True):
         inputshape = get_shape_list(input_tensor, expected_rank=3)
         batch_size = inputshape[0]
@@ -173,6 +175,7 @@ class WTEmbedding(tf.keras.layers.Layer):
         )
         self.built = True
 
+    @tf.function
     def call(self, input_ids):
         output = tf.gather(self.embedding_table, input_ids)
         return output

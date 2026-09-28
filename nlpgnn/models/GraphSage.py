@@ -5,6 +5,7 @@
 """
 from nlpgnn.gnn.utils import *
 from nlpgnn.gnn.GSConv import GraphSAGEConvolution
+from tensorflow import function
 
 
 class GNNInput(NamedTuple):
@@ -24,6 +25,7 @@ class GraphSAGE(tf.keras.Model):
 
         self.drop = tf.keras.layers.Dropout(drop_rate)
 
+    @function
     def call(self, node_embeddings, edge_indexs, batchs, edge_weights=None, training=True):
         edge_indexs = [edge_indexs]
         if edge_weights == None:
@@ -38,5 +40,6 @@ class GraphSAGE(tf.keras.Model):
         x = self.dense2(x)
         return tf.math.softmax(x, -1)
 
+    @function
     def predict(self, node_embeddings, edge_indexs, batchs, edge_weights=None, training=False):
         return self(node_embeddings, edge_indexs, batchs, edge_weights, training)
