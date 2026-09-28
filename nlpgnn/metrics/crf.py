@@ -225,6 +225,7 @@ class CrfDecodeForwardRnnCell(tf.keras.layers.AbstractRNNCell):
     def build(self, input_shape):
         super(CrfDecodeForwardRnnCell, self).build(input_shape)
 
+    @tf.function(input_signature=[tf.TensorSpec(shape=(None, 46), dtype=tf.float32), [tf.TensorSpec(shape=(None, 46), dtype=tf.float32)]])
     def call(self, inputs, state):
         """Build the CrfDecodeForwardRnnCell.
         Args:
@@ -243,7 +244,7 @@ class CrfDecodeForwardRnnCell(tf.keras.layers.AbstractRNNCell):
         return backpointers, new_state
 
 
-@tf.function
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, 46), dtype=tf.int32), tf.TensorSpec(shape=None, dtype=tf.int32)])
 def crf_decode_backward(inputs, state):
     """Computes backward decoding in a linear-chain CRF.
     Args:

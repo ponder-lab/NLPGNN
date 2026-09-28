@@ -83,7 +83,7 @@ class GPT2(tf.keras.layers.Layer):
         nsteps = tf.shape(tokens)[1]
         return self.expand_tile(past_length + tf.range(nsteps), batch_size)
 
-    @tf.function
+    @tf.function(input_signature=[tf.TensorSpec(shape=(None,), dtype=tf.int32), tf.TensorSpec(shape=(), dtype=tf.int32)])
     def expand_tile(self, value, size):
         value = tf.convert_to_tensor(value, name='value')
         ndims = value.shape.ndims

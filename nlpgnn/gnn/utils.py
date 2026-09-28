@@ -50,7 +50,7 @@ def maybe_num_nodes(index, num_nodes):
     return tf.reduce_max(index) + 1 if num_nodes is None else num_nodes
 
 
-@tf.function
+@tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32), tf.TensorSpec(shape=None, dtype=tf.int32)])
 def masksoftmax(src, index, num_nodes=None):
     num_nodes = maybe_num_nodes(index, num_nodes)
     inter = tf.math.unsorted_segment_max(data=src,
