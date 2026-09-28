@@ -225,6 +225,7 @@ class CrfDecodeForwardRnnCell(tf.keras.layers.AbstractRNNCell):
     def build(self, input_shape):
         super(CrfDecodeForwardRnnCell, self).build(input_shape)
 
+    @tf.function
     def call(self, inputs, state):
         """Build the CrfDecodeForwardRnnCell.
         Args:
