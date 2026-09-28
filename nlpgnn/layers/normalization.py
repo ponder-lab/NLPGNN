@@ -122,6 +122,7 @@ class LayerNorm(tf.keras.layers.Layer):
             name='b',
         )
 
+    @tf.function(input_signature=[tf.TensorSpec(shape=(2, 2, 2), dtype=tf.float32)])
     def call(self, inputs, ):
         u = tf.reduce_mean(inputs, axis=self.axis, keepdims=True)
         s = tf.reduce_mean(tf.square(inputs - u), axis=self.axis, keepdims=True)

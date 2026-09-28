@@ -47,12 +47,14 @@ class BilstmAttention(tf.keras.Model):
         self.dense = tf.keras.layers.Dense(class_num, activation='softmax')
         self.att = attention.HieAttention(2 * hidden_dim, attention_size=100)
 
+    @tf.function
     def call(self, inputs, training=True):
         logits = self.bilstm(inputs, training)  # [B,T,2H]
         logits,_ = self.att(logits)
         logits = self.dense(logits)
         return logits
 
+    @tf.function(input_signature=[tf.TensorSpec(shape=(64, 128), dtype=tf.int64)])
     def predict(self, inputs, training=False):
         out = self(inputs, training)
         return out

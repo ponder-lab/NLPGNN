@@ -59,6 +59,7 @@ class GraphAttentionAutoEncoder(MessagePassing):
         self.drop2 = tf.keras.layers.Dropout(self.dropout_rate)
         self.built = True
 
+    @tf.function
     def message_function(self, edge_source_states, edge_source,  # x_j source
                          edge_target_states, edge_target,  # x_i target
                          num_incoming_to_node_per_message,  # degree target
@@ -83,6 +84,7 @@ class GraphAttentionAutoEncoder(MessagePassing):
         messages = edge_source_states * tf.reshape(alpha, [-1, self.heads, 1])
         return messages
 
+    @tf.function
     def call(self, inputs, weight, transpose_b, training):
         adjacency_lists = inputs.adjacency_lists
         node_embeddings = inputs.node_embeddings

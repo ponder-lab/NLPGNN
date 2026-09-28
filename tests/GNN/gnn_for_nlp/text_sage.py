@@ -53,11 +53,13 @@ class TextSAGEynamicWeight(tf.keras.layers.Layer):
             name="embedding"
         )
 
+    @tf.function
     def call(self, node, adj, batch, edge_attr, training=True):
         feature = tf.nn.embedding_lookup(self.embedding, node)
         predict = self.model(feature, adj, batch, edge_attr, training=training)
         return predict
 
+    @tf.function
     def predict(self, nodes, adj, batch, edge_attr, training=False):
         return self(nodes, adj, batch, edge_attr, training)
 
