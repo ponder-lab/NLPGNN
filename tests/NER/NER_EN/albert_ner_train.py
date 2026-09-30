@@ -72,7 +72,7 @@ writer = TFWriter(param.maxlen, vocab_file,
                   modes=["train"], check_exist=False,
                   tokenizer="sentencepiece", spm_model_file=spm_model_file)
 
-ner_load = TFLoader(param.maxlen, param.batch_size, epoch=3)
+ner_load = TFLoader(param.maxlen, param.batch_size, epoch=1)
 
 start_time = timeit.default_timer()
 skipped_time = 0
