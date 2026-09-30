@@ -85,7 +85,7 @@ bert_init_weights_from_checkpoint(model,
 writer = TFWriter(param.maxlen, vocab_file,
                   modes=["train"], check_exist=False)
 
-ner_load = TFLoader(param.maxlen, param.batch_size, epoch=5)
+ner_load = TFLoader(param.maxlen, param.batch_size, epoch=1)
 
 # 训练模型
 # 使用tensorboard
