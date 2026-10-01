@@ -88,6 +88,7 @@ writer = TFWriter(param.maxlen, vocab_file,
                   modes=["train"], check_exist=False)
 
 ner_load = TFLoader(param.maxlen, param.batch_size, epoch=1)
+num_batches = 400
 
 start_time = timeit.default_timer()
 skipped_time = 0
@@ -116,6 +117,8 @@ manager = tf.train.CheckpointManager(checkpoint, directory="./save",
 # For train model
 Batch = 0
 for X, token_type_id, input_mask, Y in ner_load.load_train():
+    if Batch == num_batches:
+        break
     with tf.GradientTape(persistent=True) as tape:
         loss, predict = model([X, token_type_id, input_mask, Y])
 
@@ -154,4 +157,4 @@ time = timeit.default_timer() - start_time - skipped_time
 avg_loss = float(total_loss) / float(loss_count)
 avg_accuracy = float(total_accuracy) / float(accuracy_count)
 
-write_csv(__file__, ner_load.epoch, float(avg_accuracy), float(avg_loss), time)
+write_csv(__file__, num_batches, float(avg_accuracy), float(avg_loss), time)
