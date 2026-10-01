@@ -1,3 +1,5 @@
+from scripts.utils import write_csv
+import timeit
 import tensorflow as tf
 
 from nlpgnn.datas.checkpoint import LoadCheckpoint
@@ -87,6 +89,15 @@ writer = TFWriter(param.maxlen, vocab_file,
 
 ner_load = TFLoader(param.maxlen, param.batch_size, epoch=1)
 
+start_time = timeit.default_timer()
+skipped_time = 0
+
+total_loss = 0
+loss_count = 0
+
+total_accuracy = 0
+accuracy_count = 0
+
 # 训练模型
 # 使用tensorboard
 summary_writer = tf.summary.create_file_writer("./tensorboard")
@@ -112,12 +123,18 @@ for X, token_type_id, input_mask, Y in ner_load.load_train():
         precision = precsionscore(Y, predict)
         recall = recallscore(Y, predict)
         accuracy = accuarcyscore(Y, predict)
+        total_loss += loss
+        loss_count += 1
+        total_accuracy += accuracy
+        accuracy_count += 1
         if Batch % 101 == 0:
+            print_time = timeit.default_timer()
             print("Batch:{}\tloss:{:.4f}".format(Batch, loss.numpy()))
             print("Batch:{}\tacc:{:.4f}".format(Batch, accuracy))
             print("Batch:{}\tprecision{:.4f}".format(Batch, precision))
             print("Batch:{}\trecall:{:.4f}".format(Batch, recall))
             print("Batch:{}\tf1score:{:.4f}".format(Batch, f1))
+            skipped_time += timeit.default_timer() - print_time
             manager.save(checkpoint_number=Batch)
 
         with summary_writer.as_default():
@@ -132,3 +149,9 @@ for X, token_type_id, input_mask, Y in ner_load.load_train():
     optimizer_bert.apply_gradients(grads_and_vars=zip(grads_bert, model.bert.variables + model.dense.variables))
     optimizer_crf.apply_gradients(grads_and_vars=zip(grads_crf, model.crf.variables))
     Batch += 1
+
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(total_loss) / float(loss_count)
+avg_accuracy = float(total_accuracy) / float(accuracy_count)
+
+write_csv(__file__, ner_load.epoch, float(avg_accuracy), float(avg_loss), time)
