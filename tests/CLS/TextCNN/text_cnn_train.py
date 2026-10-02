@@ -9,6 +9,8 @@ from nlpgnn.models import TextCNN
 from nlpgnn.optimizers import optim
 from nlpgnn.metrics import Metric, Losess
 from nlpgnn.datas.dataloader import TFWriter, TFLoader
+from scripts.utils import write_csv
+import timeit
 
 maxlen = 128
 batch_size = 64
@@ -57,6 +59,12 @@ manager = tf.train.CheckpointManager(checkpoint, directory="./save",
                                      checkpoint_name="model.ckpt",
                                      max_to_keep=3)
 
+start_time = timeit.default_timer()
+skipped_time = 0
+total_loss = 0
+total_accuracy = 0
+batch_count = 0
+
 Batch = 0
 for X, token_type_id, input_mask, Y in load.load_train():
     with tf.GradientTape() as tape:
@@ -66,14 +74,25 @@ for X, token_type_id, input_mask, Y in load.load_train():
         precision = precsionscore(Y, predict)
         recall = recallscore(Y, predict)
         accuracy = accuarcyscore(Y, predict)
+        total_loss += loss
+        total_accuracy += accuracy
+        batch_count += 1
         if Batch % 20 == 0:
+            print_time = timeit.default_timer()
             print("Batch:{}\tloss:{:.4f}".format(Batch, loss.numpy()))
             print("Batch:{}\tacc:{:.4f}".format(Batch, accuracy))
             print("Batch:{}\tprecision{:.4f}".format(Batch, precision))
             print("Batch:{}\trecall:{:.4f}".format(Batch, recall))
             print("Batch:{}\tf1score:{:.4f}".format(Batch, f1))
+            skipped_time += timeit.default_timer() - print_time
         if Batch % 10:
             manager.save(checkpoint_number=Batch)
     grads_bert = tape.gradient(loss, model.trainable_variables)
     optimizer.apply_gradients(grads_and_vars=zip(grads_bert, model.trainable_variables))
     Batch += 1
+
+time = timeit.default_timer() - start_time - skipped_time
+avg_loss = float(total_loss) / float(batch_count)
+avg_accuracy = float(total_accuracy) / float(batch_count)
+
+write_csv(__file__, load.epoch, avg_accuracy, avg_loss, time)
