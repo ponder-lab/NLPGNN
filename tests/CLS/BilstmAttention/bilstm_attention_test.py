@@ -9,6 +9,8 @@
 """
 @Author:Kaiyin Zhou
 """
+from scripts.utils import write_csv
+import timeit
 import numpy as np
 import tensorflow as tf
 from nlpgnn.layers import bilstm, attention
@@ -76,6 +78,8 @@ f1s = []
 precisions = []
 recalls = []
 accuracys = []
+start_time = timeit.default_timer()
+
 for X, token_type_id, input_mask, Y in load.load_valid():
     with tf.GradientTape() as tape:
         predict = model.predict(X)
@@ -86,8 +90,11 @@ for X, token_type_id, input_mask, Y in load.load_valid():
         # print("Sentence", writer.convert_id_to_vocab(tf.reshape(X, [-1]).numpy()))
         #
         # print("Label", writer.convert_id_to_label(tf.reshape(predict, [-1]).numpy()))
+time = timeit.default_timer() - start_time
+
 print("f1:{}\tprecision:{}\trecall:{}\taccuracy:{}\n".format(np.mean(f1s),
                                                              np.mean(precisions),
                                                              np.mean(recalls),
                                                              np.mean(accuracys)))
 
+write_csv(__file__, load.epoch, accuracy=float(np.mean(accuracys)), time=time)
