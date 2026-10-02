@@ -122,14 +122,18 @@ for X, token_type_id, input_mask, Y in ner_load.load_train():
             print("Batch:{}\tf1score:{:.4f}".format(Batch, f1))
             skipped_time += timeit.default_timer() - print_time
         if Batch % 10 == 0:
+            save_time = timeit.default_timer()
             manager.save(checkpoint_number=Batch)
+            skipped_time += timeit.default_timer() - save_time
 
+        summary_time = timeit.default_timer()
         with summary_writer.as_default():
             tf.summary.scalar("loss", loss, step=Batch)
             tf.summary.scalar("acc", accuracy, step=Batch)
             tf.summary.scalar("f1", f1, step=Batch)
             tf.summary.scalar("precision", precision, step=Batch)
             tf.summary.scalar("recall", recall, step=Batch)
+        skipped_time += timeit.default_timer() - summary_time
     grads_bert = tape.gradient(loss, model.variables)
     optimizer_bert.apply_gradients(grads_and_vars=zip(grads_bert, model.variables))
     Batch += 1
