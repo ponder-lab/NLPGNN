@@ -101,8 +101,8 @@ for X, token_type_id, input_mask, Y in load.load_train():
             print("Batch:{}\tprecision{:.4f}".format(Batch, precision))
             print("Batch:{}\trecall:{:.4f}".format(Batch, recall))
             print("Batch:{}\tf1score:{:.4f}".format(Batch, f1))
-            skipped_time += timeit.default_timer() - print_time
             manager.save(checkpoint_number=Batch)
+            skipped_time += timeit.default_timer() - print_time
     grads_bert = tape.gradient(loss, model.variables)
     optimizer.apply_gradients(grads_and_vars=zip(grads_bert, model.variables))
     Batch += 1
