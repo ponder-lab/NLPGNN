@@ -137,15 +137,17 @@ for X, token_type_id, input_mask, Y in ner_load.load_train():
             print("Batch:{}\tprecision{:.4f}".format(Batch, precision))
             print("Batch:{}\trecall:{:.4f}".format(Batch, recall))
             print("Batch:{}\tf1score:{:.4f}".format(Batch, f1))
-            skipped_time += timeit.default_timer() - print_time
             manager.save(checkpoint_number=Batch)
+            skipped_time += timeit.default_timer() - print_time
 
+        summary_time = timeit.default_timer()
         with summary_writer.as_default():
             tf.summary.scalar("loss", loss, step=Batch)
             tf.summary.scalar("acc", accuracy, step=Batch)
             tf.summary.scalar("f1", f1, step=Batch)
             tf.summary.scalar("precision", precision, step=Batch)
             tf.summary.scalar("recall", recall, step=Batch)
+        skipped_time += timeit.default_timer() - summary_time
 
     grads_bert = tape.gradient(loss, model.bert.variables + model.dense.variables)
     grads_crf = tape.gradient(loss, model.crf.variables)
