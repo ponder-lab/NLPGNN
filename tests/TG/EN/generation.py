@@ -3,6 +3,8 @@
 """
 @Author:Kaiyin Zhou
 """
+from scripts.utils import write_csv
+import timeit
 import tensorflow as tf
 
 from nlpgnn.datas.checkpoint import LoadCheckpoint
@@ -47,12 +49,23 @@ model.summary()
 
 gpt2_init_weights_from_checkpoint(model, model_path, param.n_layer)
 
+start_time = timeit.default_timer()
+skipped_time = 0
+rounds = 0
+
 generated = 0
 for _ in range(10):
     output = samples.sample_sequence(model, param, length=40, start_token=start_token,
                                      temperature=1, top_k=0, top_p=1)
+    rounds += 1
     for i in range(param["batch_size"]):
         generated += param["batch_size"]
         text = tokenizer.convert_tokens_to_string(output[i].numpy())
+        print_time = timeit.default_timer()
         print("=" * 40 + " SAMPLE " + str(generated) + " " + "=" * 40)
         print(text)
+        skipped_time += timeit.default_timer() - print_time
+
+time = timeit.default_timer() - start_time - skipped_time
+
+write_csv(__file__, rounds, time=time)
