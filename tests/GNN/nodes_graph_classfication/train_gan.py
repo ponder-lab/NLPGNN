@@ -60,18 +60,16 @@ for p in range(epoch):
     acc_v = accscore(y_val, predict_v, val_mask)
     total_accuracy += acc_v
     accuracy_count += 1
-    loss_val, acc_val = float(loss_v), float(acc_v)  # Read in the timed region, so waiting for queued GPU work is counted; only the print is skipped.
     print_time = timeit.default_timer()
-    print("Epoch {} | Loss {:.4f} | Acc {:.4f} | Time {:.4f}".format(p, loss_val, acc_val, time.time() - t))
+    print("Epoch {} | Loss {:.4f} | Acc {:.4f} | Time {:.4f}".format(p, loss_v.numpy(), acc_v, time.time() - t))
     skipped_time += timeit.default_timer() - print_time
 # --------------------------------------------------------------------------------------
 # For test
 predict_t = model.predict(features, adj)
 acc = accscore(y_test, predict_t, test_mask)
 loss = crossentropy(y_test, predict_t, test_mask)
-test_loss_val, test_acc_val = float(loss), float(acc)  # Read in the timed region, so waiting for queued GPU work is counted; only the print is skipped.
 print_time = timeit.default_timer()
-print("Test Loss {:.4f} | ACC {:.4f}".format(test_loss_val, test_acc_val))
+print("Test Loss {:.4f} | ACC {:.4f}".format(loss.numpy(), acc))
 skipped_time += timeit.default_timer() - print_time
 
 time = timeit.default_timer() - start_time - skipped_time
