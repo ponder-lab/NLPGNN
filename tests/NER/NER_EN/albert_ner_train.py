@@ -47,8 +47,6 @@ class ALBERT_NER(tf.keras.Model):
         return output
 
 
-# Timing starts before the model is built: build traces the model's decorated layers, and the
-# training loop reuses those traces, so building is counted.
 start_time = timeit.default_timer()
 skipped_time = 0
 
@@ -69,7 +67,6 @@ optimizer_bert = optim.AdamWarmup(learning_rate=1e-5)  # 0.1
 sparse_categotical_loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False)
 
 # 初始化参数
-# Loading pretrained weights and writing the TFRecords stay untimed, as before.
 io_time = timeit.default_timer()
 albert_init_weights_from_checkpoint(model,
                                     model_path,
