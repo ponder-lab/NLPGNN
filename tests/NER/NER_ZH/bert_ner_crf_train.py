@@ -61,11 +61,16 @@ class BERT_NER(tf.keras.Model):
         return predict
 
 
+start_time = timeit.default_timer()
+skipped_time = 0
+
 model = BERT_NER(param)
 
 model.build(input_shape=(4, param.batch_size, param.maxlen))
 
+print_time = timeit.default_timer()
 model.summary()
+skipped_time += timeit.default_timer() - print_time
 
 # 构建优化器
 
@@ -78,6 +83,7 @@ optimizer_crf = optim.AdamWarmup(learning_rate=1e-3,
                                  )
 #
 # 初始化参数
+io_time = timeit.default_timer()
 bert_init_weights_from_checkpoint(model,
                                   model_path,
                                   param.num_hidden_layers,
@@ -86,12 +92,10 @@ bert_init_weights_from_checkpoint(model,
 # 写入数据 通过check_exist=True参数控制仅在第一次调用时写入
 writer = TFWriter(param.maxlen, vocab_file,
                   modes=["train"], check_exist=False)
+skipped_time += timeit.default_timer() - io_time
 
 ner_load = TFLoader(param.maxlen, param.batch_size, epoch=1)
 num_batches = 400
-
-start_time = timeit.default_timer()
-skipped_time = 0
 
 total_loss = 0
 loss_count = 0
