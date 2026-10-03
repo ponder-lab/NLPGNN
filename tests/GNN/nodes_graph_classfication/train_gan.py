@@ -60,17 +60,13 @@ for p in range(epoch):
     acc_v = accscore(y_val, predict_v, val_mask)
     total_accuracy += acc_v
     accuracy_count += 1
-    print_time = timeit.default_timer()
     print("Epoch {} | Loss {:.4f} | Acc {:.4f} | Time {:.4f}".format(p, loss_v.numpy(), acc_v, time.time() - t))
-    skipped_time += timeit.default_timer() - print_time
 # --------------------------------------------------------------------------------------
 # For test
 predict_t = model.predict(features, adj)
 acc = accscore(y_test, predict_t, test_mask)
 loss = crossentropy(y_test, predict_t, test_mask)
-print_time = timeit.default_timer()
 print("Test Loss {:.4f} | ACC {:.4f}".format(loss.numpy(), acc))
-skipped_time += timeit.default_timer() - print_time
 
 time = timeit.default_timer() - start_time - skipped_time
 avg_loss = float(total_loss) / float(loss_count)
