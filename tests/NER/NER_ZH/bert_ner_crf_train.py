@@ -61,8 +61,6 @@ class BERT_NER(tf.keras.Model):
         return predict
 
 
-# Timing starts before the model is built: build traces the model's decorated layers, and the
-# training loop reuses those traces, so building is counted.
 start_time = timeit.default_timer()
 skipped_time = 0
 
@@ -85,7 +83,6 @@ optimizer_crf = optim.AdamWarmup(learning_rate=1e-3,
                                  )
 #
 # 初始化参数
-# Loading pretrained weights and writing the TFRecords stay untimed, as before.
 io_time = timeit.default_timer()
 bert_init_weights_from_checkpoint(model,
                                   model_path,
