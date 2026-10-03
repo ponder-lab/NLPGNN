@@ -47,11 +47,18 @@ class ALBERT_NER(tf.keras.Model):
         return output
 
 
+# Timing starts before the model is built: build traces the model's decorated layers, and the
+# training loop reuses those traces, so building is counted.
+start_time = timeit.default_timer()
+skipped_time = 0
+
 model = ALBERT_NER(param)
 
 model.build(input_shape=(3, param.batch_size, param.maxlen))
 
+print_time = timeit.default_timer()
 model.summary()
+skipped_time += timeit.default_timer() - print_time
 
 # batch_size增加k学习率也要增加k倍
 # optimizer_bert = optim.AdamWarmup(learning_rate=2e-5,  # 重要参数
@@ -62,6 +69,8 @@ optimizer_bert = optim.AdamWarmup(learning_rate=1e-5)  # 0.1
 sparse_categotical_loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False)
 
 # 初始化参数
+# Loading pretrained weights and writing the TFRecords stay untimed, as before.
+io_time = timeit.default_timer()
 albert_init_weights_from_checkpoint(model,
                                     model_path,
                                     param.num_hidden_layers,
@@ -71,11 +80,9 @@ albert_init_weights_from_checkpoint(model,
 writer = TFWriter(param.maxlen, vocab_file,
                   modes=["train"], check_exist=False,
                   tokenizer="sentencepiece", spm_model_file=spm_model_file)
+skipped_time += timeit.default_timer() - io_time
 
 ner_load = TFLoader(param.maxlen, param.batch_size, epoch=1)
-
-start_time = timeit.default_timer()
-skipped_time = 0
 
 total_loss = 0
 loss_count = 0
