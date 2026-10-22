@@ -33,12 +33,14 @@ class GAAELayer(tf.keras.layers.Layer):
         self.encoder_layers.append(GraphAttentionAutoEncoder(self.hidden_dim, heads=self.heads))
         self.decoder_layers.append(GraphAttentionAutoEncoder(input_dim, heads=self.heads))
 
+    @tf.function
     def encoder(self, node_embeddings, adjacency_lists, training):
         for layer in range(self.num_layers):
             node_embeddings = self.encoder_layers[layer](GNNInput(node_embeddings, adjacency_lists), self.weight[layer],
                                                          False, training)
         return node_embeddings
 
+    @tf.function
     def decoder(self, hidden_embeddings, adjacency_lists, training):
         for layer in range(self.num_layers):
             hidden_embeddings = self.decoder_layers[layer](GNNInput(hidden_embeddings, adjacency_lists),
@@ -47,6 +49,7 @@ class GAAELayer(tf.keras.layers.Layer):
                                                            training)
         return hidden_embeddings
 
+    @tf.function
     def call(self, node_embeddings, adjacency_lists, training=True):
         hidden_embeddings = self.encoder(node_embeddings, adjacency_lists, training)
         reconstruct_embedding = self.decoder(hidden_embeddings, adjacency_lists, training)
