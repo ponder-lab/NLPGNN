@@ -244,7 +244,7 @@ class CrfDecodeForwardRnnCell(tf.keras.layers.AbstractRNNCell):
         return backpointers, new_state
 
 
-@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, 46), dtype=tf.int32), tf.TensorSpec(shape=None, dtype=tf.int32)])
+@tf.function(input_signature=[tf.TensorSpec(shape=(None, None, 46), dtype=tf.int32), tf.TensorSpec(shape=(None, 1), dtype=tf.int32)])
 def crf_decode_backward(inputs, state):
     """Computes backward decoding in a linear-chain CRF.
     Args:
