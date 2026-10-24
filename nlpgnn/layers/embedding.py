@@ -175,7 +175,7 @@ class WTEmbedding(tf.keras.layers.Layer):
         )
         self.built = True
 
-    @tf.function(input_signature=[tf.TensorSpec(shape=(None, 1), dtype=tf.int32)])
+    @tf.function(reduce_retracing=True)
     def call(self, input_ids):
         output = tf.gather(self.embedding_table, input_ids)
         return output

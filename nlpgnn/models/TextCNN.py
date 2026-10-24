@@ -64,7 +64,7 @@ class TextCNN(tf.keras.Model):
         out = self.dense(out)
         return out
 
-    @tf.function(input_signature=[tf.TensorSpec(shape=(64, 128), dtype=tf.int64)])
+    @tf.function(reduce_retracing=True)
     def predict(self, inputs, training=False):
         re = self(inputs, training)
         return re

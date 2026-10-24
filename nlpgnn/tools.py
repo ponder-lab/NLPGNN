@@ -82,7 +82,7 @@ def assert_rank(tensor, expected_rank, name=None):
         )
 
 
-@tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32)])
+@tf.function(reduce_retracing=True)
 def gelu(x):
     import numpy as np
     cdf = 0.5 * (1.0 + tf.tanh((np.sqrt(2 / np.pi) * (x + 0.044715 * tf.pow(x, 3)))))

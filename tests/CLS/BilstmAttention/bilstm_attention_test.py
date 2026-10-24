@@ -56,7 +56,7 @@ class BilstmAttention(tf.keras.Model):
         logits = self.dense(logits)
         return logits
 
-    @tf.function(input_signature=[tf.TensorSpec(shape=(64, 128), dtype=tf.int64)])
+    @tf.function(reduce_retracing=True)
     def predict(self, inputs, training=False):
         out = self(inputs, training)
         return out
