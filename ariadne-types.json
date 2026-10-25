@@ -71,6 +71,30 @@
       "dtype": "int64",
       "shape": "3371 1",
       "attribution": "MUTAG graph_indicator, zero-based; note the 2-D (n, 1) row structure from read_raw_text. Runtime-recorded 2026-07-27."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "Planetoid.load",
+      "variable": "y_train",
+      "dtype": "float64",
+      "shape": "n m",
+      "attribution": "np.zeros(labels.shape) at graphloader.py:407, with the train_mask rows copied from labels at :411. labels = np.vstack((ally, ty)) at :396 stacks the pickled Planetoid ind.<name>.ally and ind.<name>.ty arrays (pkl.load at :367, from github.com/kimiyoung/planetoid), so n is the node count and m the class count: cora (2708, 7) in train_gan.py, citeseer (3327, 6) in train_gcn.py and GAAE.py. It is float64 for both, from np.zeros' default, although cora's labels is int32 and citeseer's float64 (its isolated-node fix pads ty with float64 zeros at :384). Returned at :423; train_gan.py and train_gcn.py pass it as the label argument of MaskCategoricalCrossentropy and MaskAccuracy. Runtime-recorded 2026-10-24 from the Planetoid download."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "Planetoid.load",
+      "variable": "y_val",
+      "dtype": "float64",
+      "shape": "n m",
+      "attribution": "np.zeros(labels.shape) at graphloader.py:408, with the val_mask rows copied from labels at :412. labels = np.vstack((ally, ty)) at :396 stacks the pickled Planetoid ind.<name>.ally and ind.<name>.ty arrays (pkl.load at :367, from github.com/kimiyoung/planetoid), so n is the node count and m the class count: cora (2708, 7) in train_gan.py, citeseer (3327, 6) in train_gcn.py and GAAE.py. It is float64 for both, from np.zeros' default, although cora's labels is int32 and citeseer's float64 (its isolated-node fix pads ty with float64 zeros at :384). Returned at :423; train_gan.py and train_gcn.py pass it as the label argument of MaskCategoricalCrossentropy and MaskAccuracy. Runtime-recorded 2026-10-24 from the Planetoid download."
+    },
+    {
+      "module": "nlpgnn/datas/graphloader.py",
+      "function": "Planetoid.load",
+      "variable": "y_test",
+      "dtype": "float64",
+      "shape": "n m",
+      "attribution": "np.zeros(labels.shape) at graphloader.py:409, with the test_mask rows copied from labels at :413. labels = np.vstack((ally, ty)) at :396 stacks the pickled Planetoid ind.<name>.ally and ind.<name>.ty arrays (pkl.load at :367, from github.com/kimiyoung/planetoid), so n is the node count and m the class count: cora (2708, 7) in train_gan.py, citeseer (3327, 6) in train_gcn.py and GAAE.py. It is float64 for both, from np.zeros' default, although cora's labels is int32 and citeseer's float64 (its isolated-node fix pads ty with float64 zeros at :384). Returned at :423; train_gan.py and train_gcn.py pass it as the label argument of MaskCategoricalCrossentropy and MaskAccuracy. Runtime-recorded 2026-10-24 from the Planetoid download."
     }
   ]
 }
