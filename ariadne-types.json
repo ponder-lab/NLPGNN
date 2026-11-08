@@ -95,6 +95,14 @@
       "dtype": "float64",
       "shape": "n m",
       "attribution": "np.zeros(labels.shape) at graphloader.py:409, with the test_mask rows copied from labels at :413. labels = np.vstack((ally, ty)) at :396 stacks the pickled Planetoid ind.<name>.ally and ind.<name>.ty arrays (pkl.load at :367, from github.com/kimiyoung/planetoid), so n is the node count and m the class count: cora (2708, 7) in train_gan.py, citeseer (3327, 6) in train_gcn.py and GAAE.py. It is float64 for both, from np.zeros' default, although cora's labels is int32 and citeseer's float64 (its isolated-node fix pads ty with float64 zeros at :384). Returned at :423; train_gan.py and train_gcn.py pass it as the label argument of MaskCategoricalCrossentropy and MaskAccuracy. Runtime-recorded 2026-10-24 from the Planetoid download."
+    },
+    {
+      "module": "nlpgnn/sample/samples.py",
+      "function": "sample_sequence.step",
+      "variable": "presents",
+      "dtype": "float32",
+      "shape": "10 36 2 20 n 64",
+      "attribution": "tf.reshape(presents, past_shape) at samples.py:71, past_shape built at :60-62 as [batch_size, n_layer, 2, n_head, -1, n_embd // n_head] from the param object LoadCheckpoint.load_gpt2_param returns (json.load of hparams.json at checkpoint.py:216). tests/TG/EN/generation.py loads the 774M checkpoint (parameters=\"large\", read from gpt_large/), whose hparams.json gives n_layer 36, n_head 20 and n_embd 1280, and sets param.batch_size = 10 at :26. n is the token count so far: step returns it as the next past, which body concatenates along axis -2 at :86, and GPT2.call unstacks axis 1 into one past per block at gpt2.py:103. float32 from GPT2's Keras layers. Axis structure runtime-checked 2026-11-07 with NLPGNN's GPT2 at reduced sizes under TF 2.9.3; the 774M sizes are read from its hparams.json."
     }
   ]
 }
