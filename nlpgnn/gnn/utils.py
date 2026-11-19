@@ -44,10 +44,12 @@ def remove_self_loop(adjacency_lists, edge_attr=None):
     return adjacency_lists, edge_attr
 
 
+@tf.function
 def maybe_num_nodes(index, num_nodes):
     return tf.reduce_max(index) + 1 if num_nodes is None else num_nodes
 
 
+@tf.function
 def masksoftmax(src, index, num_nodes=None):
     num_nodes = maybe_num_nodes(index, num_nodes)
     inter = tf.math.unsorted_segment_max(data=src,
@@ -148,6 +150,7 @@ def merge_batch_graph(x, y, edge_index, edge_attr, batch):
     return x, y, edge_index, edge_attr, batch
 
 
+@tf.function
 def batch_read_out(x, batch, method="sum", size=None):
     n_batch = tf.unique(batch)[1]
     size = tf.reduce_max(n_batch) + 1 if size is None else size

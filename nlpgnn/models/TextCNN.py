@@ -50,6 +50,7 @@ class TextCNN(tf.keras.Model):
         self.dense = tf.keras.layers.Dense(class_num, activation='softmax')
         self.bn = tf.keras.layers.BatchNormalization()
 
+    @tf.function
     def call(self, inputs, training=True):
         embedding = self.embedding(inputs)
         convs = []
@@ -63,6 +64,7 @@ class TextCNN(tf.keras.Model):
         out = self.dense(out)
         return out
 
+    @tf.function
     def predict(self, inputs, training=False):
         re = self(inputs, training)
         return re

@@ -263,6 +263,7 @@ class HieAttention(tf.keras.layers.Layer):
             initializer=self.U_initializer,
         )
 
+    @tf.function
     def call(self, encoder_output):  # [batch,sequence_len,feats_dim]
         if self.hidden_size != encoder_output.shape[-1]:
             raise ValueError("Dim of {} and {} must equal".format("hidden_size", "encode_input"))
@@ -410,6 +411,7 @@ class GPTAttention(tf.keras.layers.Layer):
         m = i > j - ns + nd
         return tf.cast(m, dtype)
 
+    @tf.function
     def softmax(self, x, axis=-1):
         x = x - tf.reduce_max(x, axis=axis, keepdims=True)
         ex = tf.exp(x)
