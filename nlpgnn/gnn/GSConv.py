@@ -104,6 +104,7 @@ class GraphSAGEConvolution(MessagePassing):
 
         return new_nodes_states
 
+    @tf.function
     def _calculate_messages_all_type(self, node_embeddings, adjacency_lists,
                                      edge_weights, training):
         messages_all_type = []

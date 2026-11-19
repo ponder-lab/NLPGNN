@@ -184,6 +184,7 @@ class TFLoader(object):
         self.epoch = epoch
         self.task = task
 
+    @tf.function(input_signature=[tf.TensorSpec(shape=(), dtype=tf.string)])
     def decode_record(self, record):
         # 告诉解码器每一个feature的类型
         if self.task.lower() == 'ner':
