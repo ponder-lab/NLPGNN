@@ -54,7 +54,6 @@ class GraphSAGEConvolution(MessagePassing):
             )
         self.built = True
 
-    @tf.function
     def message_function(self, edge_source_states, edge_source,  # x_j source
                          edge_target_states, edge_target,  # x_i target
                          num_incoming_to_node_per_message,  # degree target

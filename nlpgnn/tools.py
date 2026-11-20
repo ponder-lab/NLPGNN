@@ -29,7 +29,6 @@ def reshape_to_matrix(tensor):
     return tensor_2d
 
 
-@tf.function
 def reshape_from_matrix(output_tensor, orig_shape_list):
     if len(orig_shape_list) == 2:
         return output_tensor
