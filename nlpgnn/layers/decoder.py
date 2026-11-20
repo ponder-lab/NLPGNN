@@ -34,6 +34,7 @@ class GreedyDecoder():
         self.decoder = cell
         self.dense = output_layer
 
+    @tf.function
     def __call__(self, encoder_output, init_input, max_length):
         decode_batch = tf.zeros((encoder_output.shape[0], max_length))
         cell_input = init_input

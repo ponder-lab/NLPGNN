@@ -13,7 +13,6 @@ from nlpgnn.tools import create_initializer, reshape_to_matrix, get_shape_list
 from nlpgnn.layers import dense
 
 
-@tf.function
 def transpose_for_scores(input_tensor, batch_size, num_attention_heads, seq_length, width):
     output_tensor = tf.reshape(input_tensor, [batch_size, seq_length, num_attention_heads, width])
     output_tensor = tf.transpose(output_tensor, [0, 2, 1, 3])
@@ -412,6 +411,7 @@ class GPTAttention(tf.keras.layers.Layer):
         m = i > j - ns + nd
         return tf.cast(m, dtype)
 
+    @tf.function
     def softmax(self, x, axis=-1):
         x = x - tf.reduce_max(x, axis=axis, keepdims=True)
         ex = tf.exp(x)

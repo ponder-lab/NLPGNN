@@ -16,7 +16,6 @@ class GNNInput(NamedTuple):
     adjacency_lists: List
 
 
-@tf.function
 def add_remain_self_loop(adjacency_lists, num_nodes):
     loop_index = tf.range(0, num_nodes)
     loop_index = tf.expand_dims(loop_index, 1)

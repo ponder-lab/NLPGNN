@@ -29,7 +29,6 @@ def reshape_to_matrix(tensor):
     return tensor_2d
 
 
-@tf.function
 def reshape_from_matrix(output_tensor, orig_shape_list):
     if len(orig_shape_list) == 2:
         return output_tensor
@@ -82,7 +81,7 @@ def assert_rank(tensor, expected_rank, name=None):
         )
 
 
-@tf.function(reduce_retracing=True)
+@tf.function
 def gelu(x):
     import numpy as np
     cdf = 0.5 * (1.0 + tf.tanh((np.sqrt(2 / np.pi) * (x + 0.044715 * tf.pow(x, 3)))))
